@@ -1,6 +1,6 @@
 /*
  * Tyler Deans
- * February 22, 2016
+ * February 25, 2016
  * This is the model for the filter expression
  * The answer to the quesstion is calculated here
  * The question to be displayed in the view is created
@@ -11,12 +11,28 @@ function FilterModel(_simModel) {
   this.simModel = _simModel;
 }
 
+function getQuestionType() {
+	var randNum = getRandomInt(1, 3);
+	if (randNum === 1) {
+		var type = "number";
+	} else{
+		var type = "string";
+	}
+
+	return type;
+}
+
+function getNumOfElements() {
+	// generate a number between 3 and 9
+	return getRandomInt(3, 10);
+}
+
+function getRandomString(strList) {
+	var index = getRandomInt(0, strList.length);
+	return strList[index];
+}
+
 /*
- * There should be a helper method that generates a list with a random number of elements
- * For lists of numbers and strings
- * A method that creates a number list which calls the number of list elements generator method
- * Then appends a number (generated) randomly to the list (for loop until the end of the list)
- * 
  * The string list generator is similar to the number list generator
  * Except that the elements come from a large list of strings
  * The string from that list is picked randomly (index is randomly chosen)
@@ -27,12 +43,53 @@ function FilterModel(_simModel) {
  *
 */
 
+function stringListGenerator() {
+	var numOfElements = getNumOfElements();
+	var stringList = ["soup", "dog", "orange", "park", "cat", "helps", "talks", "castle", "genius", "flaming"];
+	var list = [];
+	for (var i = 0; i < numOfElements; i++) {
+		list[i] = getRandomString(stringList);
+	}
+	return list;
+}
+/*
+ * There should be a helper method that generates a list with a random number of elements
+ * For lists of numbers and strings
+ * A method that creates a number list which calls the number of list elements generator method
+ * Then appends a number (generated) randomly to the list (for loop until the end of the list)
+ * 
+ */
+function numberListGenerator() {
+	var numOfElements = getNumOfElements();
+	var list = [];
+	for (var i = 0; i < numOfElements; i++) {
+		list[i] = getRandomInt(0, 10);
+	}
+	return list;
+}
+
+//use debugger; command to pause code when running in Chrome developer tool
+
 FilterModel.prototype.randomFilterExpression = function() {
 	/*
 	* Based on the question type create the filter expression string
 	* The answer should be a list with zero or more elements (zero elements look like [])
 	* The answer is saved in a local varible and is returned
 	*/
+	var filterString = "fun filter (f,xs) =\n";
+	filterString += "\tcase xs of\n";
+	filterString += "\t\t[] => []\n";
+	filterString += "\t\t| x::xs' => if f x\n";
+	filterString += "\t\t\tthen x::(filter(f,xs'))\n";
+	filterString += "\t\t\telse filter(f,xs')\n";
+	filterString += "fun myFilter (xs,n) = filter (fn x => x > n, xs)\n";
+
+	var questionType = getQuestionType();
+	if (questionType === "number") {
+		this.filterExpression = "<pre>" + filterString + "\n";
+	} else{
+
+	}
 	
 }
 

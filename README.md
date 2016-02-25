@@ -1,11 +1,11 @@
 # filter
 
 fun filter (f,xs) =
-      case xs of
-               [] => []
-             | x::xs' => if f x
-                         then x::(filter(f,xs'))
-                         else filter(f,xs')
+	case xs of
+         [] => []
+         | x::xs' => if f x
+                     then x::(filter(f,xs'))
+                     else filter(f,xs')
 
 
 fun myFilter (xs,n) = filter (fn x => x > n, xs)   <---- <, <=, >, >=, =
