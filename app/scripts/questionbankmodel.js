@@ -1,6 +1,6 @@
 /*
  * Tyler Deans
- * February 29, 2016
+ * March 01, 2016
  * questionbankmodel.js
  */
 
@@ -82,39 +82,31 @@ QuestionBankModel.prototype.masteryAchieved = function() {
 QuestionBankModel.prototype.checkAnswer = function(studentAnswer) {
     // Converts the student's answer to a string.
     var studentAnswerString = studentAnswer.toString();
+    var correctAnswer = false;
 
-    // checks if the student's answer used square brackets
-    if (!(studentAnswerString.indexOf('[') >= 0) && !(studentAnswerString.indexOf(']') >= 0)) {
-        // if not returns false
-        return false;
-    }
-
-    // id the list was empty
-    if (studentAnswerString == "[]") {
-        return true;
-    }
-    // Remove square brackets from the student's answer.
-    studentAnswerString = studentAnswerString.replace("[", "").replace("]", "");
-    studentAnswerList = studentAnswerString.split(",");
-
-    for (var i = 0; i < this.answers.length; i++) {
-        if (this.answers.length > 1) {
-            for (var j = 0; j < this.answer[i].length; j++) {
-                if (this.answers[i][j].toString() === studentAnswerList[j]) {
-                    return true;
-                }
-            }    
-        } else {
-            if (this.answers[i].toString() === studentAnswerList[j]) {
-                    return true;
+    // if the list is empty
+    if (this.answers.length == 0) {
+        if (studentAnswerString == "[]") {
+            correctAnswer = true;
+        }   
+    } else {
+        // turns the string into a list of strings
+        studentAnswerString2 = studentAnswerString.replace("[", "").replace("]", "");
+        studentAnswerList = studentAnswerString2.replace(/['"]+/g, '').replace(" ", "").split(",");
+        for (var i = 0; i < this.answers.length; i++) {
+            if (this.answers[i] == studentAnswerList[i]) {
+                correctAnswer = true;
             }
+
         }
-        
     }
-    return false;
+    // if the user enters nothing it returns false
+    if (studentAnswerString == "") {
+        correctAnswer = false;
+    }
+
+    return correctAnswer;
 }
-
-
 
 /*
  * Create a new set of question templateString
@@ -172,17 +164,17 @@ QuestionBankModel.prototype.setAnswers = function(_filter) {
     // Set the answer(s) to the question indicated by questionIndex.
 
     if (this.questionIndex == 0) {
-        this.answers.push(_filter.randomFilterExpression());
+        this.answers = _filter.randomFilterExpression();
 
     } else if (this.questionIndex == 1) {
-        this.answers.push(_filter.randomFilterExpression());
+        this.answers = _filter.randomFilterExpression();
 
     } else if (this.questionIndex == 2) {
-        this.answers.push(_filter.randomFilterExpression());
+        this.answers = _filter.randomFilterExpression();
 
     } else if (this.questionIndex == 3) {
-        this.answers.push(_filter.randomFilterExpression());
+        this.answers = _filter.randomFilterExpression();
     } else {
-        this.answers.push(_filter.randomFilterExpression());
+        this.answers = _filter.randomFilterExpression();
     }
 }

@@ -187,7 +187,16 @@ FilterModel.prototype.randomFilterExpression = function() {
 
 		
 		this.filterExpression += "fun myFilter (xs,n) = filter (fn x => x " + operator + " n, xs)\n";
-		this.filterExpression += "val x = " + "[" + numList.toString() + "]\n";
+		this.filterExpression += "val myList = " + "[";
+        for (var i = 0; i < numList.length; i++) {
+            // if it is the last element print the string without the comma
+            if (i == (numList.length - 1)) {
+                this.filterExpression += numList[i];
+            } else { // otherwise print the string with the comma
+                this.filterExpression += numList[i] + ', ';    
+            }
+        }
+        this.filterExpression += "]\n";
 		this.filterExpression += "val x = myFilter (myList, " + xNum + ")</pre>";
 		var answer = getNumberAnswer(numList, operator, xNum);
 	} else {
@@ -196,7 +205,16 @@ FilterModel.prototype.randomFilterExpression = function() {
 		var operator = getLogicalOperator();
 
 		this.filterExpression += "fun myFilter (xs, l) = filter (fn x => String.size x " + operator + " l, xs)\n";
-		this.filterExpression += "val x = " + "[" + strList + "]\n";
+        this.filterExpression += "val myList = [";
+        for (var i = 0; i < strList.length; i++) {
+            // if it is the last element print the string without the comma
+            if (i == (strList.length - 1)) {
+                this.filterExpression += '"' + strList[i] + '"';
+            } else { // otherwise print the string with the comma
+                this.filterExpression += '"' + strList[i] + '", ';    
+            }
+        }
+        this.filterExpression += "]\n"
 		this.filterExpression += "val x = myFilter (myList, " + xNum + ")</pre>";
 		var answer = getStringAnswer(strList, operator, xNum);
 	}
