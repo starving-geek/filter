@@ -80,14 +80,40 @@ QuestionBankModel.prototype.masteryAchieved = function() {
  * Use code from one of your prior projects to help rewrite the method
  */
 QuestionBankModel.prototype.checkAnswer = function(studentAnswer) {
-    for (var i = 0; i < this.answers.length; i++) {
-        if (this.answers[i] === studentAnswer) {
-            return true;
-        }
+    // Converts the student's answer to a string.
+    var studentAnswerString = studentAnswer.toString();
+
+    // checks if the student's answer used square brackets
+    if (!(studentAnswerString.indexOf('[') >= 0) && !(studentAnswerString.indexOf(']') >= 0)) {
+        // if not returns false
+        return false;
     }
 
+    // id the list was empty
+    if (studentAnswerString == "[]") {
+        return true;
+    }
+    // Remove square brackets from the student's answer.
+    studentAnswerString = studentAnswerString.replace("[", "").replace("]", "");
+    studentAnswerList = studentAnswerString.split(",");
+
+    for (var i = 0; i < this.answers.length; i++) {
+        if (this.answers.length > 1) {
+            for (var j = 0; j < this.answer[i].length; j++) {
+                if (this.answers[i][j].toString() === studentAnswerList[j]) {
+                    return true;
+                }
+            }    
+        } else {
+            if (this.answers[i].toString() === studentAnswerList[j]) {
+                    return true;
+            }
+        }
+        
+    }
     return false;
 }
+
 
 
 /*
@@ -97,8 +123,6 @@ QuestionBankModel.prototype.createNewQuestions = function() {
     // Each question template is an array holding either strings
     // or executable commands stored as strings.
     this.questions = [
-        ["Given the ML code above, what is x bound to?"],
-        ["Given the ML code above, what is x bound to?"],
         ["Given the ML code above, what is x bound to?"],
         ["Given the ML code above, what is x bound to?"],
         ["Given the ML code above, what is x bound to?"],

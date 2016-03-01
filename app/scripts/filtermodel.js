@@ -2,7 +2,7 @@
  * Tyler Deans
  * February 29, 2016
  * This is the model for the filter expression
- * The answer to the quesstion is calculated here
+ * The answer to the question is calculated here
  * The question to be displayed in the view is created
  */
 
@@ -132,31 +132,31 @@ function getStringAnswer(list, operator, xVal) {
     var answerList = [];
     if (operator == "<") {
         for (var i = 0; i < list.length; i++) {
-            if (list[i] < xVal) {
+            if (list[i].length < xVal) {
                 answerList.push(list[i]);
             }
         }
     } else if (operator == "<=") {
         for (var i = 0; i < list.length; i++) {
-            if (list[i] <= xVal) {
+            if (list[i].length <= xVal) {
                 answerList.push(list[i]);
             }
         }
     } else if (operator == ">") {
         for (var i = 0; i < list.length; i++) {
-            if (list[i] > xVal) {
+            if (list[i].length > xVal) {
                 answerList.push(list[i]);
             }
         }
     } else if (operator == ">=") {
         for (var i = 0; i < list.length; i++) {
-            if (list[i] >= xVal) {
+            if (list[i].length >= xVal) {
                 answerList.push(list[i]);
             }
         }
     } else {
         for (var i = 0; i < list.length; i++) {
-            if (list[i] == xVal) {
+            if (list[i].length == xVal) {
                 answerList.push(list[i]);
             }
         }
@@ -172,32 +172,33 @@ FilterModel.prototype.randomFilterExpression = function() {
 	 * The answer is saved in a local varible and is returned
 	 */
 	var filterString = "fun filter (f,xs) =\n";
-	filterString += "\tcase xs of\n";
-	filterString += "\t\t[] => []\n";
-	filterString += "\t\t| x::xs' => if f x\n";
-	filterString += "\t\t\tthen x::(filter(f,xs'))\n";
-	filterString += "\t\t\telse filter(f,xs')\n";
-	filterString += "fun myFilter (xs,n) = filter (fn x => x > n, xs)\n";
+	filterString += "	case xs of\n";
+	filterString += "		[] => []\n";
+	filterString += "		| x::xs' => if f x\n";
+	filterString += "			then x::(filter(f,xs'))\n";
+	filterString += "			else filter(f,xs')\n";
+	this.filterExpression = "<pre>" + filterString + "\n";
 
 	var questionType = getQuestionType();
 	if (questionType === "number") {
 		var numList = numberListGenerator();
 		var xNum = getRandomInt(0, 9);
 		var operator = getLogicalOperator();
-		this.filterExpression += "<pre>" + filterString + "\n";
+
+		
 		this.filterExpression += "fun myFilter (xs,n) = filter (fn x => x " + operator + " n, xs)\n";
-		this.filterExpression += "val x " + "[" + numList.toString() + "]\n";
+		this.filterExpression += "val x = " + "[" + numList.toString() + "]\n";
 		this.filterExpression += "val x = myFilter (myList, " + xNum + ")</pre>";
-		//var answer = getNumberAnswer(numList, operator, xNum);
+		var answer = getNumberAnswer(numList, operator, xNum);
 	} else {
 		var strList = stringListGenerator();
 		var xNum = getRandomInt(0, 9);
 		var operator = getLogicalOperator();
-		this.filterExpression += "<pre>" + filterString + "\n";
+
 		this.filterExpression += "fun myFilter (xs, l) = filter (fn x => String.size x " + operator + " l, xs)\n";
-		this.filterExpression += "val x " + "[" + strList + "]\n";
+		this.filterExpression += "val x = " + "[" + strList + "]\n";
 		this.filterExpression += "val x = myFilter (myList, " + xNum + ")</pre>";
-		//var answer = getStringAnswer(numList, questionType, operator, xNum);
+		var answer = getStringAnswer(strList, operator, xNum);
 	}
 
 	return answer;
