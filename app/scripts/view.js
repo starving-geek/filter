@@ -2,7 +2,7 @@
  * main.js
  * Rich Simpson
  * Tyler Deans
- * February 13, 2016
+ * March 3, 2016
  * This code implements a mastery-based exercise on graph
  * theory for integration with Smart Sparrow.
  *
@@ -60,8 +60,32 @@ SimView.prototype.setupControls = function() {
             // give them feedback
             $("#txtFeedback").html("Right. The answer is " + studentAnswer);
         } else {
+            var answerArrayString = "";
+            var answer = simController.simModel.questionBank.answers;
+            /*
+             * Puts the elements in a string
+            */
+            for (var i = 0; i < answer.length; i++) {
+                // if the correct answer is an array of strings
+                if (typeof answer[i] === 'string') {
+                    // if it is the last element print the string without the comma
+                    if (i == (answer.length - 1)) {
+                        answerArrayString += '"' + answer[i] + '"';
+                    } else { // otherwise print the string with the comma
+                        answerArrayString += '"' + answer[i] + '", ';
+                    }
+                } else { // if the correct answer is an array of numbers
+                    // if it is the last element print the string without the comma
+                    if (i == (answer.length - 1)) {
+                        answerArrayString += answer[i];
+                    } else { // otherwise print the string with the comma
+                        answerArrayString += answer[i] + ', ';
+                    }
+                }
+
+            }
             // give them feedback
-            $("#txtFeedback").html("That is incorrect. The correct answer is [" + simController.simModel.questionBank.answers + "]");
+            $("#txtFeedback").html("That is incorrect. The correct answer is [" + answerArrayString + "]");
         }
         // has mastery been demonstrated?
         if (simController.simModel.questionBank.masteryAchieved()) {

@@ -83,21 +83,30 @@ QuestionBankModel.prototype.checkAnswer = function(studentAnswer) {
     // Converts the student's answer to a string.
     var studentAnswerString = studentAnswer.toString();
     var correctAnswer = false;
-    /* if the answer is supposed to be a string but the user enters 
-     * the string elements without double quotes correctAnswer is false
-     */
-    if (studentAnswerString.indexOf('"') === -1 && studentAnswerString.match(/[a-z]/i)) {
-        correctAnswer = false;
-    }
+
+
     // if the list is empty
     if (this.answers.length == 0) {
         if (studentAnswerString == "[]") {
             correctAnswer = true;
         }
+        /* if the answer is supposed to be a string but the user enters
+         * the string elements without double quotes correctAnswer is false
+        */
+    } else if ((studentAnswer.indexOf('"') === -1) && studentAnswer.match(/[a-z]/i)) {
+        return false;
+    } else if ((studentAnswer.indexOf("[") === -1) && (studentAnswer.indexOf("]") === -1)) {
+        return false;
     } else {
         // turns the string into a list of strings
         studentAnswerString2 = studentAnswerString.replace("[", "").replace("]", "");
         studentAnswerList = studentAnswerString2.replace(/['"]+/g, '').replace(" ", "").split(",");
+
+        // checks if the user entered the correct number of elements in the array
+        // if not then returns false
+        if (studentAnswerList.length != this.answers.length) {
+            return false;
+        }
         for (var i = 0; i < this.answers.length; i++) {
             if (this.answers[i] == studentAnswerList[i]) {
                 correctAnswer = true;
