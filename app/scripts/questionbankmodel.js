@@ -83,12 +83,17 @@ QuestionBankModel.prototype.checkAnswer = function(studentAnswer) {
     // Converts the student's answer to a string.
     var studentAnswerString = studentAnswer.toString();
     var correctAnswer = false;
-
+    /* if the answer is supposed to be a string but the user enters 
+     * the string elements without double quotes correctAnswer is false
+     */
+    if (studentAnswerString.indexOf('"') === -1 && studentAnswerString.match(/[a-z]/i)) {
+        correctAnswer = false;
+    }
     // if the list is empty
     if (this.answers.length == 0) {
         if (studentAnswerString == "[]") {
             correctAnswer = true;
-        }   
+        }
     } else {
         // turns the string into a list of strings
         studentAnswerString2 = studentAnswerString.replace("[", "").replace("]", "");
