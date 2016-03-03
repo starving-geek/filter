@@ -60,6 +60,8 @@ SimView.prototype.setupControls = function() {
             // give them feedback
             $("#txtFeedback").html("Right. The answer is " + studentAnswer);
         } else {
+            // prints the array
+            // if the array contains strings it prints the double quotes
             var answerArrayString = "";
             var answer = simController.simModel.questionBank.answers;
             /*
