@@ -82,13 +82,13 @@ QuestionBankModel.prototype.masteryAchieved = function() {
 QuestionBankModel.prototype.checkAnswer = function(studentAnswer) {
     // Converts the student's answer to a string.
     var studentAnswerString = studentAnswer.toString();
-    var correctAnswer = false;
+    var correctAnswers = [];
 
 
     // if the list is empty
     if (this.answers.length == 0) {
         if (studentAnswerString == "[]") {
-            correctAnswer = true;
+            return true;
         }
         /* if the answer is supposed to be a string but the user enters
          * the string elements without double quotes correctAnswer is false
@@ -97,10 +97,13 @@ QuestionBankModel.prototype.checkAnswer = function(studentAnswer) {
         return false;
     } else if ((studentAnswer.indexOf("[") === -1) && (studentAnswer.indexOf("]") === -1)) {
         return false;
+    } else if ((studentAnswer.indexOf("[") === -1) || (studentAnswer.indexOf("]") === -1)) {
+        // if the student forgets to add an [ or ] to the list it returns false
+        return false;
     } else {
         // turns the string into a list of strings
         studentAnswerString2 = studentAnswerString.replace("[", "").replace("]", "");
-        studentAnswerList = studentAnswerString2.replace(/['"]+/g, '').replace(" ", "").split(",");
+        studentAnswerList = studentAnswerString2.replace(/['"]+/g, '').split(", ");
 
         // checks if the user entered the correct number of elements in the array
         // if not then returns false
@@ -108,18 +111,34 @@ QuestionBankModel.prototype.checkAnswer = function(studentAnswer) {
             return false;
         }
         for (var i = 0; i < this.answers.length; i++) {
-            if (this.answers[i] == studentAnswerList[i]) {
-                correctAnswer = true;
+            /* checks if the values are equal not the type
+             * if one if the elements is a string and the other is an
+             * integer they are equal if the values are the same
+            */
+            if (this.answers[i].toString() === studentAnswerList[i]) {
+                correctAnswers.push(true);
+            } else {
+                correctAnswers.push(false);
             }
 
         }
     }
-    // if the user enters nothing it returns false
-    if (studentAnswerString == "") {
-        correctAnswer = false;
+    // This code ensures that the student's list has all the correct answers
+    var numTrue = 0;
+    var numFalse = 0;
+    for (var i = 0; i < correctAnswers.length; i++) {
+        if (correctAnswers[i] === true) {
+            numTrue++;
+        } else {
+            numFalse++;
+        }
     }
-
-    return correctAnswer;
+    // if all of the elements are correct return true
+    if (numTrue === correctAnswers.length) {
+        return true;
+    } else{ // if not return false
+        return false;
+    }
 }
 
 /*
